@@ -1,0 +1,49 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'com.university'
+version = '1.0.0'
+
+application {
+    mainClass = 'com.university.Main'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.google.guava:guava:31.1-jre'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+tasks{
+    compileJava.options.encoding = 'UTF-8'
+    compileTestJava.options.encoding = 'UTF-8'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+// Пример кастомной задачи
+tasks.register('buildReport') {
+    dependsOn build
+    doLast {
+        def jarFile = file("build/libs/${project.name}-${project.version}.jar")
+        println "=== BUILD REPORT ==="
+        println "Project: ${project.name}"
+        println "Version: ${project.version}"
+        println "JAR file: ${jarFile.name}"
+        println "Size: ${jarFile.length()} bytes"
+        println "Time: ${new Date()}"
+    }
+}
